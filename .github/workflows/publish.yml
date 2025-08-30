@@ -1,8 +1,10 @@
 name: Build and Test Wheels, Publish on Release
 
 on:
+  push:
+    branches: [ main, dev ]
   release:
-    types: [published] 
+    types: [ published ] 
 
 jobs:
   build_wheels:
