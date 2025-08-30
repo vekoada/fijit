@@ -276,7 +276,12 @@ FIJS_Index* fijs_index_create(const char* text) {
         return NULL;
     }
 
-    index->text = text;
+    index->text = strdup(text);
+    if (!index->text) {
+        arena_free(&index->master_arena);
+        free(index);
+        return NULL;
+    }
     index->text_len = text_len;
     index->index = build_char_index(text, text_len, location_size_bytes, &index->master_arena);
 
@@ -291,6 +296,7 @@ FIJS_Index* fijs_index_create(const char* text) {
 
 void fijs_index_destroy(FIJS_Index* index) {
     if (index) {
+        free((void*)index->text); 
         arena_free(&index->master_arena);
         free(index);
     }
