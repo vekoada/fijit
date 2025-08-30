@@ -22,13 +22,13 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@latest
+        uses: pypa/cibuildwheel@3.1.4
         env:
           CIBW_ARCHS_LINUX: auto aarch64
           CIBW_ARCHS_MACOS: auto arm64
 
       - name: Store artifacts
-        uses: actions/upload-artifact@v4x
+        uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 
