@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, dev ]
   release:
-    types: [ published ] 
+    types: [ published ]
 
 jobs:
   build_wheels:
@@ -15,11 +15,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU (for ARM builds)
         if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.12.0
@@ -28,13 +28,14 @@ jobs:
           CIBW_ARCHS_MACOS: auto arm64
 
       - name: Store artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 
   upload_pypi:
     name: Upload to PyPI
     needs: [build_wheels]
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -44,7 +45,7 @@ jobs:
 
     steps:
       - name: Download all wheels
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
